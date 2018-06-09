@@ -29,7 +29,7 @@ public class LogAspect {
 
 	private static final String POINTCUT_LOG = "@annotation(Log)";
 	private static final String POINTCUT_REQUEST = "@annotation(org.springframework.web.bind.annotation.RequestMapping)";
-	private static final String POINTCUT_PACKAGE = "execution(* br.com.finch.xgracco.*.*(..))";
+	private static final String POINTCUT_PACKAGE = "execution(* org.ps.camunda.java.*.*(..))";
 
 	public static final Function<Class<?>, Logger> logger = clazz -> LoggerFactory.getLogger(clazz);
 	

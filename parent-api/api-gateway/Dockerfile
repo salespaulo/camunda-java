@@ -1,6 +1,6 @@
 # FROM openjdk:8-jre-alpine
 FROM java:8
-MAINTAINER Finch Solucoes
+MAINTAINER Post Scriptum
 
 # Common
 ENV TZ America/Sao_Paulo

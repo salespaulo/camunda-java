@@ -1,6 +1,6 @@
-# xgracco-gateway-server
+# api-gateway
 
-Projeto maven para um gateway api do sistema, *spring-zuul-server*.
+Projeto maven para um api gateway api 
 
 ```
 $> sudo docker run -d                          \
@@ -13,5 +13,5 @@ $> sudo docker run -d                          \
     -e "DB_USERNAME=<user>"                    \
     -e "DB_PASSWORD=<password>"                \
     -e "LOGSTASH_HOST_PORT=<host>:<port>"      \
-    -p 8080:8080 xgracco-gateway-server
+    -p 8080:8080 api-gateway
 ```

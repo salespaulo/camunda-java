@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface BaseRestController {
 	
-	static final String V1_MEDIA_TYPE = "application/vnd.finchsolucoes.api.v1+json";
 	static final String ERROR_MEDIA_TYPE = "application/vnd.error+json";
 
 	URI createLocation(ApiResource resource);
