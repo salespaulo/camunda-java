@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.ps.camunda.java</groupId>
+	<artifactId>parent</artifactId>
+	<version>0.0.1</version>
+	<packaging>pom</packaging>
+
+	<name>parent</name>
+	<description>Camunda Java Parent Project</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.13.RELEASE</version>
+		<relativePath />
+	</parent>
+
+	<properties>
+		<!-- Formato que é mostrada a data e hora do último build -->
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+
+		<!-- Nomes dos artefatos -->
+		<build.snapshot.final.name>${project.artifactId}_${project.version}_${maven.build.timestamp}</build.snapshot.final.name>
+		<build.release.final.name>${project.artifactId}_${project.version}</build.release.final.name>
+
+		<!-- Encoding -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Java version -->
+		<java.version>1.8</java.version>
+
+		<!-- Plugins -->
+		<dockerfile-maven-version>1.4.3</dockerfile-maven-version>
+		<docker.image.prefix></docker.image.prefix>
+		<docker.build.skip>false</docker.build.skip>
+
+		<!-- Dependencies -->
+		<spring-cloud.version>Edgware.SR3</spring-cloud.version>
+		<commons-lang3.version>3.4</commons-lang3.version>
+		<commons-io.version>2.6</commons-io.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<artifactId>jjwt</artifactId>
+				<groupId>io.jsonwebtoken</groupId>
+				<version>0.7.0</version>
+			</dependency>
+
+
+			<dependency>
+				<groupId>net.logstash.logback</groupId>
+				<artifactId>logstash-logback-encoder</artifactId>
+				<version>4.9</version>
+			</dependency>
+
+			<dependency>
+			  <groupId>org.apache.commons</groupId>
+			  <artifactId>commons-lang3</artifactId>
+			  <version>${commons-lang3.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<profiles>
+		<profile>
+			<id>development</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<environment.name>development</environment.name>
+			</properties>
+		</profile>
+		<profile>
+			<id>production</id>
+			<properties>
+				<environment.name>production</environment.name>
+			</properties>
+			<build>
+				<finalName>${build.release.final.name}</finalName>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<finalName>${build.snapshot.final.name}</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.1.0</version>
+					<configuration>
+						<descriptorRefs>
+							<descriptorRef>src</descriptorRef>
+						</descriptorRefs>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>com.spotify</groupId>
+					<artifactId>dockerfile-maven-plugin</artifactId>
+					<version>${dockerfile-maven-version}</version>
+					<executions>
+						<execution>
+							<id>default</id>
+							<goals>
+								<goal>build</goal>
+								<goal>push</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<skip>${docker.build.skip}</skip>
+						<repository>${docker.image.prefix}${project.artifactId}</repository>
+						<tag>${project.version}</tag>
+						<buildArgs>
+							<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+						</buildArgs>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>maven-central</id>
+			<url>http://repo1.maven.org/maven2/</url>
+		</repository>
+
+		<repository>
+			<id>spring-releases</id>
+			<url>https://repo.spring.io/libs-release</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-releases</id>
+			<url>https://repo.spring.io/libs-release</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<modules>
+		<!-- Servers -->
+		<module>server-elk</module>
+		<module>server-postgres</module>
+		<module>server-config</module>
+		<module>server-eureka</module>
+
+		<!-- Core Libraries -->
+		<module>parent-lib</module>
+
+		<!-- Camunda Workflow Example -->
+		<module>camunda-example</module>
+
+		<!-- Microservice Apis -->
+		<module>parent-api</module>
+
+		<!-- Web Applications
+		<module>parent-web</module>
+		 -->
+	</modules>
+
+</project>

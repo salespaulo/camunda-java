@@ -1,0 +1,20 @@
+{
+    "server": {
+        "name": "nodejs",
+        "version": "1.0.0",
+        "running": true
+    },
+    "jwt": {
+        "header": "Authorization",
+        "secret": "change-me-please"
+    },
+    "logger": {
+        "file": {
+            "path": "./nodejs.log",
+            "level": "debug"
+        },
+        "console": {
+            "level": "debug"
+        }
+    }
+}

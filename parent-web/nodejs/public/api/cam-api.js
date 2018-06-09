@@ -1,0 +1,66 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express = require("express");
+const camunda_service_1 = require("../service/camunda-service");
+const URI = '/cam';
+const camDeploy = (req, res, next) => {
+    camunda_service_1.deploy('../config/orderProcess.bpmn')
+        .then(res => {
+        console.log('>>>>>>>>>>>>>. deploy res', res);
+    })
+        .then(function (response) {
+        const status = response.status;
+        if (status === 200) {
+            console.log('deployed orderProcess');
+            res.json(response);
+        }
+        else {
+            console.error('failed to deploy orderProcess (status=%s)', status);
+            res.status(500).json(response);
+        }
+    }).catch(function (err) {
+        res.status(500).json(err);
+    });
+};
+const camStart = (req, res, next) => {
+    const goods = [
+        { name: 'Apple', amount: 5 },
+        { name: 'Banana', amount: 1 }
+    ];
+    camunda_service_1.start(goods)
+        .then(function (response) {
+        const status = response.status;
+        if (status === 200) {
+            console.log('started orderProcess');
+            res.json(response);
+        }
+        else {
+            console.error('failed to start orderProcess (status=%s)', status);
+            response.json().then(function (json) {
+                console.log(json);
+                res.status(500).json(json);
+            });
+        }
+    }).catch(function (err) {
+        console.error('failed to start orderProcess (error=%s)', err);
+        res.status(500).json(err);
+    });
+};
+const checkout = (req, res, next) => {
+    res.json({ test: 'checkout it' });
+};
+const shipment = (req, res, next) => {
+    res.json({ test: 'shipment it' });
+};
+class CamundaApi {
+    routes() {
+        return express.Router()
+            .post('/order/deploy', camDeploy)
+            .post('/order/process', camStart)
+            .post('/order/checkout', checkout)
+            .post('/order/shipment', shipment);
+    }
+}
+const api = new CamundaApi();
+exports.default = server => server.use(URI, api.routes());
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY2FtLWFwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy9hcHAvYXBpL2NhbS1hcGkudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFHQSxtQ0FBa0M7QUFHbEMsZ0VBQWtFO0FBRWxFLE1BQU0sR0FBRyxHQUFHLE1BQU0sQ0FBQTtBQUVsQixNQUFNLFNBQVMsR0FBRyxDQUFDLEdBQUcsRUFBRSxHQUFHLEVBQUUsSUFBSSxFQUFFLEVBQUU7SUFDakMsd0JBQU0sQ0FBQyw2QkFBNkIsQ0FBQztTQUNoQyxJQUFJLENBQUMsR0FBRyxDQUFDLEVBQUU7UUFDUixPQUFPLENBQUMsR0FBRyxDQUFDLDJCQUEyQixFQUFFLEdBQUcsQ0FBQyxDQUFBO0lBQ2pELENBQUMsQ0FBQztTQUNELElBQUksQ0FBQyxVQUFVLFFBQVE7UUFDcEIsTUFBTSxNQUFNLEdBQUcsUUFBUSxDQUFDLE1BQU0sQ0FBQztRQUUvQixFQUFFLENBQUMsQ0FBQyxNQUFNLEtBQUssR0FBRyxDQUFDLENBQUMsQ0FBQztZQUNqQixPQUFPLENBQUMsR0FBRyxDQUFDLHVCQUF1QixDQUFDLENBQUM7WUFDckMsR0FBRyxDQUFDLElBQUksQ0FBQyxRQUFRLENBQUMsQ0FBQTtRQUN0QixDQUFDO1FBQUMsSUFBSSxDQUFDLENBQUM7WUFDSixPQUFPLENBQUMsS0FBSyxDQUFDLDJDQUEyQyxFQUFFLE1BQU0sQ0FBQyxDQUFDO1lBQ25FLEdBQUcsQ0FBQyxNQUFNLENBQUMsR0FBRyxDQUFDLENBQUMsSUFBSSxDQUFDLFFBQVEsQ0FBQyxDQUFBO1FBQ2xDLENBQUM7SUFDTCxDQUFDLENBQUMsQ0FBQyxLQUFLLENBQUMsVUFBVSxHQUFHO1FBQ2xCLEdBQUcsQ0FBQyxNQUFNLENBQUMsR0FBRyxDQUFDLENBQUMsSUFBSSxDQUFDLEdBQUcsQ0FBQyxDQUFBO0lBQzdCLENBQUMsQ0FBQyxDQUFBO0FBQ1YsQ0FBQyxDQUFBO0FBRUQsTUFBTSxRQUFRLEdBQUcsQ0FBQyxHQUFHLEVBQUUsR0FBRyxFQUFFLElBQUksRUFBRSxFQUFFO0lBQ2hDLE1BQU0sS0FBSyxHQUFHO1FBQ1YsRUFBRSxJQUFJLEVBQUUsT0FBTyxFQUFFLE1BQU0sRUFBRSxDQUFDLEVBQUU7UUFDNUIsRUFBRSxJQUFJLEVBQUUsUUFBUSxFQUFFLE1BQU0sRUFBRSxDQUFDLEVBQUU7S0FDaEMsQ0FBQTtJQUVELHVCQUFLLENBQUMsS0FBSyxDQUFDO1NBQ1AsSUFBSSxDQUFDLFVBQVUsUUFBUTtRQUNwQixNQUFNLE1BQU0sR0FBRyxRQUFRLENBQUMsTUFBTSxDQUFDO1FBRS9CLEVBQUUsQ0FBQyxDQUFDLE1BQU0sS0FBSyxHQUFHLENBQUMsQ0FBQyxDQUFDO1lBQ2pCLE9BQU8sQ0FBQyxHQUFHLENBQUMsc0JBQXNCLENBQUMsQ0FBQztZQUNwQyxHQUFHLENBQUMsSUFBSSxDQUFDLFFBQVEsQ0FBQyxDQUFBO1FBQ3RCLENBQUM7UUFBQyxJQUFJLENBQUMsQ0FBQztZQUNKLE9BQU8sQ0FBQyxLQUFLLENBQUMsMENBQTBDLEVBQUUsTUFBTSxDQUFDLENBQUM7WUFFbEUsUUFBUSxDQUFDLElBQUksRUFBRSxDQUFDLElBQUksQ0FBQyxVQUFVLElBQUk7Z0JBQy9CLE9BQU8sQ0FBQyxHQUFHLENBQUMsSUFBSSxDQUFDLENBQUM7Z0JBQ2xCLEdBQUcsQ0FBQyxNQUFNLENBQUMsR0FBRyxDQUFDLENBQUMsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFBO1lBQzlCLENBQUMsQ0FBQyxDQUFDO1FBQ1AsQ0FBQztJQUNMLENBQUMsQ0FBQyxDQUFDLEtBQUssQ0FBQyxVQUFVLEdBQUc7UUFDbEIsT0FBTyxDQUFDLEtBQUssQ0FBQyx5Q0FBeUMsRUFBRSxHQUFHLENBQUMsQ0FBQztRQUM5RCxHQUFHLENBQUMsTUFBTSxDQUFDLEdBQUcsQ0FBQyxDQUFDLElBQUksQ0FBQyxHQUFHLENBQUMsQ0FBQTtJQUM3QixDQUFDLENBQUMsQ0FBQTtBQUNWLENBQUMsQ0FBQTtBQUVELE1BQU0sUUFBUSxHQUFHLENBQUMsR0FBRyxFQUFFLEdBQUcsRUFBRSxJQUFJLEVBQUUsRUFBRTtJQUVoQyxHQUFHLENBQUMsSUFBSSxDQUFDLEVBQUUsSUFBSSxFQUFFLGFBQWEsRUFBRSxDQUFDLENBQUE7QUFDckMsQ0FBQyxDQUFBO0FBRUQsTUFBTSxRQUFRLEdBQUcsQ0FBQyxHQUFHLEVBQUUsR0FBRyxFQUFFLElBQUksRUFBRSxFQUFFO0lBRWhDLEdBQUcsQ0FBQyxJQUFJLENBQUMsRUFBRSxJQUFJLEVBQUUsYUFBYSxFQUFFLENBQUMsQ0FBQTtBQUNyQyxDQUFDLENBQUE7QUFFRDtJQUNJLE1BQU07UUFDRixNQUFNLENBQUMsT0FBTyxDQUFDLE1BQU0sRUFBRTthQUNsQixJQUFJLENBQUMsZUFBZSxFQUFFLFNBQVMsQ0FBQzthQUNoQyxJQUFJLENBQUMsZ0JBQWdCLEVBQUUsUUFBUSxDQUFDO2FBQ2hDLElBQUksQ0FBQyxpQkFBaUIsRUFBRSxRQUFRLENBQUM7YUFDakMsSUFBSSxDQUFDLGlCQUFpQixFQUFFLFFBQVEsQ0FBQyxDQUFBO0lBQzFDLENBQUM7Q0FDSjtBQUVELE1BQU0sR0FBRyxHQUFHLElBQUksVUFBVSxFQUFFLENBQUE7QUFFNUIsa0JBQWUsTUFBTSxDQUFDLEVBQUUsQ0FBQyxNQUFNLENBQUMsR0FBRyxDQUFDLEdBQUcsRUFBRSxHQUFHLENBQUMsTUFBTSxFQUFFLENBQUMsQ0FBQSJ9

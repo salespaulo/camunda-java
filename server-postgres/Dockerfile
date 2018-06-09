@@ -1,0 +1,12 @@
+FROM postgres:latest
+MAINTAINER Post Scriptum
+
+VOLUME pgdata:/var/lib/postgresql/data
+
+ARG DB_USERNAME=postgres
+ARG DB_PASSWORD=postgres
+ARG DB_NAME=camunda
+
+ENV POSTGRES_PASSWORD=$DB_USERNAME
+ENV POSTGRES_USER=$DB_PASSWORD
+ENV POSTGRES_DB=$DB_NAME

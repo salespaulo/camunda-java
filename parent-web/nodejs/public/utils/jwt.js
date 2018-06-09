@@ -1,0 +1,26 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const jwt = require("jsonwebtoken");
+const config = require("config");
+const errors_1 = require("../utils/errors");
+const crypto_1 = require("../utils/crypto");
+const jwtSecret = config.has('jwt.secret') ? config.get('jwt.secret') : 'nodejs-secret-prime(115)';
+const secret = crypto_1.encode(jwtSecret);
+const sign = data => new Promise((resolve, reject) => jwt.sign({
+    data: data,
+    exp: Math.floor(Date.now() / 1000) + (60 * 60)
+}, secret, (err, encoded) => {
+    if (err)
+        reject(errors_1.newUnauthorized(err));
+    else
+        resolve(encoded);
+}));
+exports.sign = sign;
+const verify = token => new Promise((resolve, reject) => jwt.verify(token, secret, (err, decoded) => {
+    if (err)
+        reject(errors_1.newUnauthorized(err));
+    else
+        resolve(decoded);
+}));
+exports.verify = verify;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiand0LmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vc3JjL2FwcC91dGlscy9qd3QudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFDQSxvQ0FBbUM7QUFDbkMsaUNBQWdDO0FBRWhDLDRDQUFpRDtBQUNqRCw0Q0FBd0M7QUFFeEMsTUFBTSxTQUFTLEdBQUcsTUFBTSxDQUFDLEdBQUcsQ0FBQyxZQUFZLENBQUMsQ0FBQyxDQUFDLENBQUMsTUFBTSxDQUFDLEdBQUcsQ0FBQyxZQUFZLENBQUMsQ0FBQyxDQUFDLENBQUMsMEJBQTBCLENBQUE7QUFDbEcsTUFBTSxNQUFNLEdBQUcsZUFBTSxDQUFDLFNBQVMsQ0FBQyxDQUFBO0FBRWhDLE1BQU0sSUFBSSxHQUFHLElBQUksQ0FBQyxFQUFFLENBQUMsSUFBSSxPQUFPLENBQUMsQ0FBQyxPQUFPLEVBQUUsTUFBTSxFQUFFLEVBQUUsQ0FDakQsR0FBRyxDQUFDLElBQUksQ0FBQztJQUNMLElBQUksRUFBRSxJQUFJO0lBQ1YsR0FBRyxFQUFFLElBQUksQ0FBQyxLQUFLLENBQUMsSUFBSSxDQUFDLEdBQUcsRUFBRSxHQUFHLElBQUksQ0FBQyxHQUFHLENBQUMsRUFBRSxHQUFHLEVBQUUsQ0FBQztDQUNqRCxFQUFFLE1BQU0sRUFBRSxDQUFDLEdBQUcsRUFBRSxPQUFPLEVBQUUsRUFBRTtJQUN4QixFQUFFLENBQUMsQ0FBQyxHQUFHLENBQUM7UUFBQyxNQUFNLENBQUMsd0JBQWUsQ0FBQyxHQUFHLENBQUMsQ0FBQyxDQUFBO0lBQ3JDLElBQUk7UUFBQyxPQUFPLENBQUMsT0FBTyxDQUFDLENBQUE7QUFDekIsQ0FBQyxDQUFDLENBQUMsQ0FBQTtBQVFFLG9CQUFJO0FBTmIsTUFBTSxNQUFNLEdBQUcsS0FBSyxDQUFDLEVBQUUsQ0FBQyxJQUFJLE9BQU8sQ0FBQyxDQUFDLE9BQU8sRUFBRSxNQUFNLEVBQUUsRUFBRSxDQUNwRCxHQUFHLENBQUMsTUFBTSxDQUFDLEtBQUssRUFBRSxNQUFNLEVBQUUsQ0FBQyxHQUFHLEVBQUUsT0FBTyxFQUFFLEVBQUU7SUFDdkMsRUFBRSxDQUFDLENBQUMsR0FBRyxDQUFDO1FBQUMsTUFBTSxDQUFDLHdCQUFlLENBQUMsR0FBRyxDQUFDLENBQUMsQ0FBQTtJQUNyQyxJQUFJO1FBQUMsT0FBTyxDQUFDLE9BQU8sQ0FBQyxDQUFBO0FBQ3pCLENBQUMsQ0FBQyxDQUFDLENBQUE7QUFFUSx3QkFBTSJ9
