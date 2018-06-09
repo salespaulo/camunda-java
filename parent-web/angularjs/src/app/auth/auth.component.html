@@ -1,0 +1,53 @@
+<mat-card class="div-login-middle">
+    <mat-card-title>
+        Login
+    </mat-card-title>
+    <mat-card-content>
+        <form>
+            <mat-form-field>
+                <input
+                    matInput
+                    required
+                    autofocus
+                    #email="ngModel"
+                    [(ngModel)]="user.email"
+                    placeholder="Usuário"
+                    name="email"
+                    />
+                <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                    <div *ngIf="email.errors.required">
+                        E-mail é obrigatório!
+                    </div>
+                    <div *ngIf="email.errors.email">
+                        E-mail inválido!
+                    </div>
+                </div>
+            </mat-form-field>
+            
+            <mat-form-field>
+                <input 
+                    matInput 
+                    required
+                    #passwd="ngModel"
+                    [(ngModel)]="user.password"
+                    type="password"
+                    placeholder="Senha"
+                    name="passwd" 
+                    minlength="4"
+                    />
+                <div *ngIf="passwd.invalid && (passwd.dirty || passwd.touched)">
+                    <div *ngIf="passwd.errors.required">
+                        Senha é obrigatório!
+                    </div>
+                    <div *ngIf="passwd.errors.minlength">
+                        Senha deve conter ao menos 5 caracteres!
+                    </div>
+                </div>
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button (click)="onClean()">LIMPAR</button>
+        <button mat-raised-button color="primary" (click)="onSignin()">ENTRAR</button>
+    </mat-card-actions>
+</mat-card>

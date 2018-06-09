@@ -1,0 +1,11 @@
+.div-start-middle {
+  display: inline-block;
+  position: fixed;
+  top: 5%;
+  bottom: 5%;
+  left: 0;
+  right: 0;
+  width: 80%;
+  height: 80%;
+  margin: auto;
+}

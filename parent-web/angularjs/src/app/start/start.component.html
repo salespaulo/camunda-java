@@ -1,0 +1,50 @@
+<mat-card class="div-start-middle">
+    <mat-card-header>
+        <mat-card-title>Iniciando Processo - {{ model.processDefinitionKey }} </mat-card-title>
+        <mat-card-subtitle>Preencha o formulário!</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <form>
+            <mat-form-field>
+                <input
+                    matInput
+                    required
+                    autofocus
+                    #valueA="ngModel"
+                    [(ngModel)]="model.valueA"
+                    placeholder="Valor A"
+                    name="valueA"
+                    />
+                <div *ngIf="valueA.invalid && (valueA.dirty || valueA.touched)">
+                    <div *ngIf="valueA.errors.required">
+                        O campo Valor A é obrigatório!
+                    </div>
+                </div>
+            </mat-form-field>
+            
+            <mat-form-field>
+                <input 
+                    matInput 
+                    required
+                    #valueB="ngModel"
+                    [(ngModel)]="model.valueB"
+                    placeholder="Valor B"
+                    name="valueB" 
+                    minlength="9"
+                    />
+                <div *ngIf="valueB.invalid && (valueB.dirty || valueB.touched)">
+                    <div *ngIf="valueB.errors.required">
+                        O campo Valor B é obrigatório!
+                    </div>
+                    <div *ngIf="valueB.errors.minlength">
+                        Valor B deve conter ao menos 10 caracteres!
+                    </div>
+                </div>
+            </mat-form-field>
+        </form>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button (click)="onGoBack()">Voltar</button>
+        <button mat-raised-button color="primary" (click)="onProcessStart()">COMPLETAR</button>
+    </mat-card-actions>
+</mat-card>
